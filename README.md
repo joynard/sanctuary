@@ -1,61 +1,61 @@
 # Sanctuary
 
-Aplikasi Android native untuk melihat berapa banyak gestur scroll yang kamu
-lakukan di TikTok, Instagram, dan YouTube. Offline-first, tanpa email/Google,
-dengan akun anonim opsional untuk sinkronisasi dan backup JSON mandiri.
+A native Android app for seeing how many scroll gestures you make in TikTok,
+Instagram, and YouTube. Offline-first, without email or Google, with an optional
+anonymous account for sync and standalone JSON backup.
 
-> Status: **MVP 0.1.0 + cloud sync**. Build debug/release dan seluruh unit test
-> lulus. Verifikasi perangkat nyata untuk akurasi hitung TikTok/Instagram/YouTube
-> masih diperlukan.
+> Status: **MVP 0.1.0 + cloud sync**. Debug/release builds and all unit tests
+> pass. Real-device verification of TikTok/Instagram/YouTube counting accuracy
+> is still required.
 
 | Onboarding | Dashboard |
 |---|---|
-| ![Onboarding Sanctuary](docs/screenshots/onboarding.png) | ![Dashboard Sanctuary](docs/screenshots/dashboard.png) |
+| ![Sanctuary onboarding](docs/screenshots/onboarding.png) | ![Sanctuary dashboard](docs/screenshots/dashboard.png) |
 
-## Kenapa Android dulu
+## Why Android first
 
-Android memberi aplikasi akses ke event `TYPE_VIEW_SCROLLED` lewat
-AccessibilityService. iOS tidak menyediakan cara resmi untuk menghitung scroll di
-dalam aplikasi pihak ketiga; Screen Time hanya memberi durasi/pemakaian kasar.
-Karena itu Sanctuary dibangun sebagai Android native, bukan janji cross-platform
-yang setengah bekerja.
+Android gives apps access to `TYPE_VIEW_SCROLLED` events through
+AccessibilityService. iOS does not provide an official way to count scrolls
+inside third-party apps; Screen Time only gives coarse duration/usage. That is
+why Sanctuary is built as native Android, not a cross-platform promise that only
+half works.
 
-## Fitur
+## Features
 
-| Fitur | Status |
+| Feature | Status |
 |---|---|
-| Hitung scroll TikTok, Instagram, YouTube | Ada, lewat AccessibilityService |
-| Hitung perpindahan YouTube Shorts | Ada, lewat transisi judul di node YouTube |
-| Logo resmi platform | Ada, aset merek masing-masing |
-| Dashboard harian + target | Ada |
-| Riwayat 7/30 hari + detail sesi | Ada |
-| Profil, niat harian, batas scroll | Ada |
-| Jeda hitung | Ada |
-| Offline-first | Ada; network hanya untuk sync opsional |
-| Backup JSON via file picker | Ada |
-| Import JSON | Belum |
-| Supabase anonymous sync | Ada, opt-in; token terenkripsi |
-| Email/Google sign-in | Tidak dipakai |
-| iOS | Tidak didukung |
+| Count TikTok, Instagram, and YouTube scrolls | Available through AccessibilityService |
+| Count YouTube Shorts transitions | Available through title transitions in the YouTube node tree |
+| Official platform logos | Available, using each brand's assets |
+| Daily dashboard + target | Available |
+| 7/30-day history + session detail | Available |
+| Profile, daily intention, scroll limit | Available |
+| Pause counting | Available |
+| Offline-first | Available; network only for optional sync |
+| JSON backup via file picker | Available |
+| JSON import | Not yet |
+| Supabase anonymous sync | Available, opt-in; encrypted token |
+| Email/Google sign-in | Not used |
+| iOS | Not supported |
 
-![Logo platform resmi](docs/screenshots/platforms.png)
+![Official platform logos](docs/screenshots/platforms.png)
 
-## Batasan yang penting
+## Important limitations
 
-Android memberi sinyal per **package**, bukan per tab. Instagram feed dan Reels
-tetap tidak bisa dipisah. YouTube Shorts memakai pager yang tidak mengirim
-`TYPE_VIEW_SCROLLED`; Sanctuary mendeteksi pergantian Shorts dari judul dan nama
-channel yang tampil di permukaan player. Yang dihitung adalah **perpindahan
-Shorts**, bukan video yang ditonton sampai selesai. Feed YouTube biasa tetap
-dihitung lewat scroll event package.
+Android reports signals per **package**, not per tab. Instagram feed and Reels
+still cannot be separated. YouTube Shorts uses a pager that does not emit
+`TYPE_VIEW_SCROLLED`; Sanctuary detects Shorts transitions from the title and
+channel name shown on the player surface. The count represents **Shorts
+transitions**, not videos watched to completion. The regular YouTube feed is
+still counted through package scroll events.
 
-Satu gestur yang selesai dihitung satu. Event fling dari framework digabung
-dengan jeda tenang 350 ms per aplikasi: event selama burst tidak menambah angka,
-tetapi gestur baru setelah jeda akan dihitung. Sesi baru dimulai setelah 30 menit
-tanpa scroll. Angka bisa lebih rendah dari persepsi pengguna bila aplikasi target
-tidak mengirim event yang bisa dibaca.
+One completed gesture counts as one. Framework fling events are merged with a
+350 ms quiet period per app: events during a burst do not add to the number, but
+a new gesture after the gap is counted. A new session starts after 30 minutes
+without scrolling. The number can be lower than the user's perception when a
+target app does not emit a readable event.
 
-## Arsitektur
+## Architecture
 
 ```
 app
@@ -66,25 +66,25 @@ app
 ├── core:designsystem
 ├── core:tracking        AccessibilityService + gate
 ├── core:sync            anonymous auth, encrypted token, push sync
-├── core:data            repository, DataStore, backup JSON
+├── core:data            repository, DataStore, JSON backup
 ├── core:database        Room
-└── core:model           model, statistik, kontrak backup
+└── core:model           model, statistics, backup contract
 ```
 
 - UI: Jetpack Compose + Material 3.
-- State: ViewModel + StateFlow + Flow dari Room/DataStore.
-- DI: composition root manual (`AppContainer` / `SanctuaryData`), tanpa framework.
-- Offline: Room adalah source of truth. Sync hanya berjalan jika diaktifkan;
-  kegagalan jaringan tidak menghapus data.
-- Backup: `kotlinx.serialization` ke `BackupDocument` versi 1.
-- Cloud: satu anonymous user per perangkat, access/refresh token dienkripsi
-  Android Keystore, push idempoten lewat PostgREST.
+- State: ViewModel + StateFlow + Flow from Room/DataStore.
+- DI: manual composition root (`AppContainer` / `SanctuaryData`), without a framework.
+- Offline: Room is the source of truth. Sync only runs when enabled; network
+  failure does not delete data.
+- Backup: `kotlinx.serialization` to `BackupDocument` version 1.
+- Cloud: one anonymous user per device, access/refresh token encrypted with
+  Android Keystore, idempotent push through PostgREST.
 
-Detail: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+Details: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
 ## Build
 
-Prasyarat: JDK 21, Android SDK 36, Gradle wrapper 8.13.
+Prerequisites: JDK 21, Android SDK 36, Gradle wrapper 8.13.
 
 ```powershell
 $env:JAVA_HOME = "C:\Program Files\Android\openjdk\jdk-21.0.8"
@@ -94,39 +94,40 @@ $env:ANDROID_HOME = "$env:LOCALAPPDATA\Android\Sdk"
 .\gradlew.bat test
 ```
 
-`test` mencakup unit test JVM (`core:model`) dan unit test Android
-(`core:data`, `core:tracking`, `core:sync`). Varian debug dan release menjalankan
-test yang sama.
+`test` covers JVM unit tests (`core:model`) and Android unit tests
+(`core:data`, `core:tracking`, `core:sync`). Debug and release variants run the
+same tests.
 
-Salin [local.properties.example](local.properties.example) menjadi `local.properties`
-lalu sesuaikan `sdk.dir`. Untuk cloud sync, isi file yang sama (tidak ikut di-commit):
+Copy [local.properties.example](local.properties.example) to `local.properties`
+and adjust `sdk.dir`. For cloud sync, fill in the same file (not committed):
 
 ```properties
 SUPABASE_URL=https://xxxx.supabase.co
 SUPABASE_ANON_KEY=sb_publishable_...
 ```
 
-Gunakan publishable/anon key. Jangan pernah memakai `service_role` di APK.
-Aktifkan **Anonymous Sign-Ins** di Supabase Auth dan jalankan migrasi.
+Use a publishable/anon key. Never use `service_role` in the APK. Enable
+**Anonymous Sign-Ins** in Supabase Auth and run the migration.
 
 APK: `app/build/outputs/apk/debug/app-debug.apk`.
 
-Instal:
+Install:
 
 ```powershell
 & "$env:ANDROID_HOME\platform-tools\adb.exe" install -r app\build\outputs\apk\debug\app-debug.apk
 ```
 
-Setelah onboarding, aktifkan **Pelacakan Sanctuary** di
-`Settings > Accessibility`. Layanan hanya dikonfigurasi untuk empat package:
-TikTok (`com.zhiliaoapp.musically`, `com.ss.android.ugc.trill`), Instagram,
-dan YouTube. `canRetrieveWindowContent=true` diperlukan untuk membaca judul
-Shorts di YouTube; isi layar tidak disimpan, tidak dilog, dan tidak dikirim.
+After onboarding, enable **Pelacakan Sanctuary** in
+`Settings > Accessibility`. The service is configured for only four packages:
+TikTok (`com.zhiliaoapp.musically`, `com.ss.android.ugc.trill`), Instagram, and
+YouTube. `canRetrieveWindowContent=true` is required to read YouTube Shorts
+titles; screen content is not stored, logged, or sent.
 
-## Backup JSON
+## JSON backup
 
-File dibuat lewat Storage Access Framework, jadi tidak perlu izin storage. Backup
-ini tidak melewati Supabase; kamu memilih sendiri lokasi filenya.
+The file is created through the Storage Access Framework, so no storage
+permission is needed. This backup does not go through Supabase; you choose the
+file location yourself.
 
 ```json
 {
@@ -154,54 +155,55 @@ ini tidak melewati Supabase; kamu memilih sendiri lokasi filenya.
 }
 ```
 
-Backup tidak berisi isi layar, pesan, akun, atau token.
+The backup does not contain screen content, messages, accounts, or tokens.
 
 ## Supabase
 
-Satu akun anonim per perangkat, tanpa email/Google. Aktifkan sekali dari kartu
-**Cloud sync** di Profil; sesi disimpan terenkripsi dan dipakai ulang otomatis.
-Profil dan sesi yang menunggu dikirim lewat PostgREST. Kegagalan jaringan hanya
-menunda sync.
+One anonymous account per device, without email or Google. Enable it once from
+the **Cloud sync** card in Profile; the session is stored encrypted and reused
+automatically. Pending profiles and sessions are pushed through PostgREST.
+Network failure only delays sync.
 
 ![Cloud sync](docs/screenshots/cloud-sync.png)
 
-Batas penting: anonymous user tidak dapat dipulihkan setelah data aplikasi
-dihapus atau di perangkat lain. Backup JSON adalah salinan mandiri. Skema dan RLS
-ada di [`supabase/migrations/0001_init.sql`](supabase/migrations/0001_init.sql);
-langkah aktivasi ada di [`supabase/README.md`](supabase/README.md).
+Important limit: an anonymous user cannot be recovered after app data is
+deleted or on another device. JSON backup is the standalone copy. Schema and RLS
+are in [`supabase/migrations/0001_init.sql`](supabase/migrations/0001_init.sql);
+activation steps are in [`supabase/README.md`](supabase/README.md).
 
-## Verifikasi
+## Verification
 
-| Cek | Hasil |
+| Check | Result |
 |---|---|
-| `:app:assembleDebug` | Sukses, APK debug 19.4 MB |
-| `:app:assembleRelease` (R8) | Sukses, APK unsigned 1.6 MB |
-| `:app:lintDebug` | 0 error, 20 warning (versi dependency dan ikon monokrom) |
-| Unit test | 33 unik, 58 eksekusi, 0 gagal |
-| Emulator API 36 | Onboarding, dashboard, riwayat, profil, jeda, backup JSON |
-| Tracking pipeline | Event `TYPE_VIEW_SCROLLED` nyata tercatat, sesi dan UI terupdate |
-| Shorts detector | Unit test signature lulus; belum diuji di YouTube asli |
-| Backup JSON | Profil + sesi tersimpan dan terbaca |
-| Supabase auth | Anonymous sign-in nyata berhasil |
-| Supabase sync | Profil dan 1 sesi berhasil dikirim, status "Tersinkron" |
-| RLS | Dua anonymous user terisolasi: user B melihat `[]` |
-| TikTok/IG/YouTube asli | Belum diuji dengan akun/feed nyata |
+| `:app:assembleDebug` | Succeeded, 19.4 MB debug APK |
+| `:app:assembleRelease` (R8) | Succeeded, 1.6 MB unsigned APK |
+| `:app:lintDebug` | 0 errors, 20 warnings (dependency versions and monochrome icon) |
+| Unit test | 33 unique, 58 runs, 0 failures |
+| Emulator API 36 | Onboarding, dashboard, history, profile, pause, JSON backup |
+| Tracking pipeline | Real `TYPE_VIEW_SCROLLED` event recorded, session and UI updated |
+| Shorts detector | Signature unit tests pass; not yet verified on real YouTube |
+| JSON backup | Profile + sessions saved and readable |
+| Supabase auth | Real anonymous sign-in succeeded |
+| Supabase sync | Profile and 1 session sent successfully, status "Tersinkron" |
+| RLS | Two anonymous users isolated: user B sees `[]` |
+| Real TikTok/IG/YouTube | Not yet tested with real accounts/feeds |
 
-Detail bukti dan batasannya ada di [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
-Klaim akurasi hitung harus diuji di perangkat dengan ketiga aplikasi target
-sebelum dipakai sehari-hari.
+Evidence and limitations are in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+Counting accuracy must be tested on a device with all three target apps before
+daily use.
 
-## Privasi dan Play Store
+## Privacy and Play Store
 
-Penggunaan AccessibilityService untuk memantau aplikasi lain memerlukan
-disclosure menonjol dan deklarasi kebijakan Play. Untuk penggunaan pribadi,
-sideload aman. Jangan mengubah konfigurasi layanan untuk membaca konten tanpa
-memperbarui disclosure dan kebijakan privasi.
+Using AccessibilityService to monitor other apps requires prominent disclosure
+and a Play policy declaration. For personal use, sideloading is safe. Do not
+change the service configuration to read content without updating the disclosure
+and privacy policy.
 
-Cloud sync mengirim profil dan hitungan scroll ke project Supabase milikmu.
-Tidak ada isi layar, pesan, atau token pihak ketiga. Untuk Shorts, judul dan
-nama channel dibaca di memori perangkat saja, tidak masuk database.
+Cloud sync sends the profile and scroll counts to your Supabase project. There
+is no screen content, messages, or third-party tokens. For Shorts, titles and
+channel names are read in device memory only and are not written to the
+database.
 
-Logo TikTok, Instagram, dan YouTube adalah merek milik pemegang hak masing-masing.
-Sumber dan catatan atribusi ada di [docs/ASSETS.md](docs/ASSETS.md). Jangan pernah
-menaruh `service_role` key di aplikasi; RLS adalah batas keamanan utama.
+TikTok, Instagram, and YouTube logos are trademarks of their respective owners.
+Sources and attribution notes are in [docs/ASSETS.md](docs/ASSETS.md). Never put
+a `service_role` key in the app; RLS is the primary security boundary.
