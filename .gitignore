@@ -13,4 +13,6 @@ qa-db/
 .cxx/
 *.jks
 *.keystore
+keystore.properties
+keystore/
 dist/
