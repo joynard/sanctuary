@@ -250,18 +250,6 @@ private fun DashboardScreen(
             item {
                 PlatformsCard(today = today)
             }
-
-            item {
-                Text(
-                    text = stringResource(R.string.dashboard_footer),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp, vertical = 4.dp),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    textAlign = TextAlign.Center,
-                )
-            }
         }
     }
 }
@@ -462,12 +450,6 @@ private fun PlatformsCard(today: com.sanctuary.core.model.DailyScrollSummary?) {
                 )
             }
         }
-        Spacer(Modifier.height(10.dp))
-        Text(
-            text = stringResource(R.string.dashboard_platform_note),
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
     }
 }
 

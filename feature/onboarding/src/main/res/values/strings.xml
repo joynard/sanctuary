@@ -2,12 +2,12 @@
 <resources>
     <string name="onboarding_eyebrow">Mulai dengan pelan</string>
     <string name="onboarding_title">Ruang kecil untuk kembali tenang.</string>
-    <string name="onboarding_intro">Sanctuary menghitung gestur scroll di TikTok, Instagram, dan YouTube. Bukan untuk menghakimi, tapi supaya kamu bisa melihat polanya dengan jernih.</string>
+    <string name="onboarding_intro">Sanctuary menghitung scroll di TikTok, Instagram, dan YouTube.</string>
     <string name="name_label">Panggil kamu siapa?</string>
     <string name="name_hint">Nama atau panggilan</string>
     <string name="name_helper">Boleh dikosongkan. Kami akan memanggilmu Sahabat.</string>
     <string name="goal_label">Batas harian</string>
-    <string name="goal_helper">Satu gestur scroll yang selesai dihitung satu. Bukan menit.</string>
+    <string name="goal_helper">Satu gestur scroll dihitung satu. Bukan menit.</string>
     <string name="goal_value">%1$d scroll</string>
     <string name="goal_min">20</string>
     <string name="goal_max">500</string>
@@ -16,10 +16,10 @@
     <string name="intention_hint">Contoh: tidur lebih awal, hadir saat makan malam.</string>
     <string name="permission_eyebrow">Izin yang dibutuhkan</string>
     <string name="permission_title">Aksesibilitas untuk menghitung scroll</string>
-    <string name="permission_body">Android tidak membuka hitungan scroll ke aplikasi lain. Sanctuary memakai layanan aksesibilitas untuk menerima event scroll dari tiga aplikasi itu saja.</string>
-    <string name="permission_enabled">Hitung scroll sudah aktif</string>
+    <string name="permission_body">Android tidak membuka hitungan scroll ke aplikasi lain. Sanctuary memakai layanan aksesibilitas untuk tiga aplikasi itu.</string>
+    <string name="permission_enabled">Hitungan sudah aktif</string>
     <string name="permission_cta">Buka pengaturan aksesibilitas</string>
-    <string name="privacy_note">Sanctuary tidak menyimpan isi layar, pesan, atau akunmu. Untuk Shorts, judul dan nama channel dibaca di memori untuk mendeteksi pergantian. Tidak ada data dikirim ke internet kecuali kamu mengaktifkan cloud sync nanti.</string>
+    <string name="privacy_note">Tidak ada isi layar atau pesan yang disimpan. Judul Shorts dibaca di memori. Cloud sync opsional.</string>
     <string name="start_button">Simpan dan mulai</string>
-    <string name="offline_note">Tanpa email atau Google. Cloud sync opsional. Riwayat bisa diekspor sebagai JSON.</string>
+    <string name="offline_note">Tanpa email atau Google. Riwayat bisa diekspor sebagai JSON.</string>
 </resources>

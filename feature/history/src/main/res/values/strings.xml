@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="history_title">Riwayat</string>
-    <string name="history_subtitle">Pola scroll dari waktu ke waktu, tanpa penilaian.</string>
+    <string name="history_subtitle">Pola scroll dari waktu ke waktu.</string>
     <string name="history_range_days">%1$d hari</string>
     <string name="history_total_label">Total rentang ini</string>
     <string name="history_total_unit">scroll dalam %1$d hari</string>
@@ -12,10 +12,9 @@
     <string name="history_peak_none">Belum ada data</string>
     <string name="history_days_label">Hari-hari</string>
     <string name="history_empty_title">Belum ada riwayat</string>
-    <string name="history_empty_body">Setelah layanan hitung aktif dan kamu membuka salah satu aplikasi, ringkasan harian akan muncul di sini.</string>
+    <string name="history_empty_body">Riwayat muncul setelah layanan hitung aktif.</string>
     <string name="history_session_count">%1$d sesi</string>
     <string name="history_expand">Buka detail hari</string>
     <string name="history_collapse">Tutup detail hari</string>
     <string name="history_session_scrolls">%1$d scroll</string>
-    <string name="history_footer">Sesi dipisahkan setelah 30 menit tanpa scroll. Satu gestur yang selesai dihitung satu, bukan setiap frame animasi.</string>
 </resources>
