@@ -4,7 +4,7 @@ A native Android app for seeing how many scroll gestures you make in TikTok,
 Instagram, and YouTube. Offline-first, without email or Google, with an optional
 anonymous account for sync and standalone JSON backup.
 
-> Status: **MVP 0.1.0 + cloud sync**. Debug/release builds and all unit tests
+> Status: **MVP 0.1.1 + cloud sync**. Debug/release builds and all unit tests
 > pass. Real-device verification of TikTok/Instagram/YouTube counting accuracy
 > is still required.
 
@@ -98,6 +98,12 @@ $env:ANDROID_HOME = "$env:LOCALAPPDATA\Android\Sdk"
 (`core:data`, `core:tracking`, `core:sync`). Debug and release variants run the
 same tests.
 
+A signed release is written to `app/build/outputs/apk/release/app-release.apk`
+when `keystore.properties` and `keystore/sanctuary-release.jks` are present.
+Copy [keystore.properties.example](keystore.properties.example), fill the
+passwords, and back up both files. They are ignored by Git; losing them blocks
+future in-place updates.
+
 Copy [local.properties.example](local.properties.example) to `local.properties`
 and adjust `sdk.dir`. For cloud sync, fill in the same file (not committed):
 
@@ -109,12 +115,13 @@ SUPABASE_ANON_KEY=sb_publishable_...
 Use a publishable/anon key. Never use `service_role` in the APK. Enable
 **Anonymous Sign-Ins** in Supabase Auth and run the migration.
 
-APK: `app/build/outputs/apk/debug/app-debug.apk`.
+Debug APK: `app/build/outputs/apk/debug/app-debug.apk`.
+Signed release APK: `app/build/outputs/apk/release/app-release.apk`.
 
-Install:
+Install the release:
 
 ```powershell
-& "$env:ANDROID_HOME\platform-tools\adb.exe" install -r app\build\outputs\apk\debug\app-debug.apk
+& "$env:ANDROID_HOME\platform-tools\adb.exe" install -r app\build\outputs\apk\release\app-release.apk
 ```
 
 After onboarding, enable **Pelacakan Sanctuary** in
@@ -134,7 +141,7 @@ file location yourself.
   "format": "sanctuary.backup",
   "schemaVersion": 1,
   "exportedAt": "2026-10-27T08:00:00Z",
-  "appVersion": "0.1.0",
+  "appVersion": "0.1.1",
   "profile": {
     "local_id": "local-profile",
     "display_name": "Sahabat",
@@ -176,7 +183,7 @@ activation steps are in [`supabase/README.md`](supabase/README.md).
 | Check | Result |
 |---|---|
 | `:app:assembleDebug` | Succeeded, 19.4 MB debug APK |
-| `:app:assembleRelease` (R8) | Succeeded, 1.6 MB unsigned APK |
+| `:app:assembleRelease` (R8) | Succeeded, 1.6 MB signed APK |
 | `:app:lintDebug` | 0 errors, 20 warnings (dependency versions and monochrome icon) |
 | Unit test | 33 unique, 58 runs, 0 failures |
 | Emulator API 36 | Onboarding, dashboard, history, profile, pause, JSON backup |

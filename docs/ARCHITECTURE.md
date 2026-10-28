@@ -1,4 +1,4 @@
-# ARCHITECTURE - Sanctuary 0.1.0
+# ARCHITECTURE - Sanctuary 0.1.1
 
 ## Prinsip
 
@@ -195,8 +195,8 @@ Dilakukan di emulator Android 16 (API 36), build debug:
 - Logo platform resmi tampil di riwayat dan dashboard; aset dan atribusi di
   `docs/ASSETS.md`.
 - Lint debug: 0 error, 20 warning (mayoritas versi dependency dan ikon monokrom).
-- Release R8 berhasil di-build dan dijalankan setelah signing dengan debug key
-  (hanya untuk smoke test; APK release yang disimpan tetap unsigned).
+- Release R8 berhasil di-build dan ditandatangani dengan release keystore lokal,
+  lalu dipasang dan dijalankan tanpa crash.
 
 Belum diverifikasi:
 
