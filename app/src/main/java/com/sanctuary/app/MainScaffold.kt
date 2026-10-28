@@ -132,6 +132,7 @@ fun MainScaffold(container: AppContainer) {
                     trackingPreferences = container.trackingPreferences,
                     backupRepository = container.backupRepository,
                     cloudSyncManager = container.cloudSyncManager,
+                    appearancePreferences = container.appearancePreferences,
                     isTrackingEnabled = isTrackingEnabled,
                     onOpenAccessibilitySettings = openAccessibilitySettings,
                     clock = container.clock,

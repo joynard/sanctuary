@@ -18,6 +18,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -37,6 +38,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.sanctuary.core.data.AppearancePreferences
 import com.sanctuary.core.data.BackupRepository
 import com.sanctuary.core.data.ProfileRepository
 import com.sanctuary.core.data.TrackingPreferences
@@ -47,6 +49,7 @@ import com.sanctuary.core.designsystem.SanctuaryPill
 import com.sanctuary.core.designsystem.SectionLabel
 import com.sanctuary.core.designsystem.SoftCard
 import com.sanctuary.core.sync.CloudSyncFailure
+import com.sanctuary.core.model.ThemeMode
 import com.sanctuary.core.sync.CloudSyncManager
 import com.sanctuary.core.sync.CloudSyncState
 import java.time.Clock
@@ -62,6 +65,7 @@ fun ProfileRoute(
     trackingPreferences: TrackingPreferences,
     backupRepository: BackupRepository,
     cloudSyncManager: CloudSyncManager,
+    appearancePreferences: AppearancePreferences,
     isTrackingEnabled: () -> Boolean,
     onOpenAccessibilitySettings: () -> Unit,
     clock: Clock,
@@ -73,6 +77,7 @@ fun ProfileRoute(
             trackingPreferences = trackingPreferences,
             backupRepository = backupRepository,
             cloudSyncManager = cloudSyncManager,
+            appearancePreferences = appearancePreferences,
             isTrackingEnabled = isTrackingEnabled,
             clock = clock,
         ),
@@ -99,6 +104,7 @@ fun ProfileRoute(
         onOpenAccessibilitySettings = onOpenAccessibilitySettings,
         onExport = { exportLauncher.launch(state.backupFileName) },
         onSyncCloud = viewModel::syncCloud,
+        onThemeChange = viewModel::setThemeMode,
         modifier = modifier,
     )
 }
@@ -114,6 +120,7 @@ private fun ProfileScreen(
     onOpenAccessibilitySettings: () -> Unit,
     onExport: () -> Unit,
     onSyncCloud: () -> Unit,
+    onThemeChange: (ThemeMode) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     SanctuaryBackground(modifier = modifier) {
@@ -292,6 +299,13 @@ private fun ProfileScreen(
             }
 
             item {
+                AppearanceCard(
+                    mode = state.themeMode,
+                    onModeChange = onThemeChange,
+                )
+            }
+
+            item {
                 SoftCard {
                     SectionLabel(stringResource(R.string.profile_backup_label))
                     Spacer(Modifier.height(10.dp))
@@ -323,12 +337,6 @@ private fun ProfileScreen(
                             Text(stringResource(R.string.profile_backup_button))
                         }
                     }
-                    Spacer(Modifier.height(8.dp))
-                    Text(
-                        text = stringResource(R.string.profile_backup_note),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
                     NoticeText(notice = state.exportNotice)
                 }
             }
@@ -352,19 +360,38 @@ private fun ProfileScreen(
                 }
             }
 
-            item {
-                Text(
-                    text = stringResource(R.string.profile_footer),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp, vertical = 4.dp),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    textAlign = TextAlign.Center,
+        }
+    }
+}
+
+@Composable
+private fun AppearanceCard(
+    mode: ThemeMode,
+    onModeChange: (ThemeMode) -> Unit,
+) {
+    SoftCard {
+        SectionLabel(stringResource(R.string.profile_appearance_label))
+        Spacer(Modifier.height(10.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            ThemeMode.entries.forEach { option ->
+                FilterChip(
+                    selected = mode == option,
+                    onClick = { onModeChange(option) },
+                    label = { Text(stringResource(option.labelRes())) },
+                    modifier = Modifier.weight(1f),
                 )
             }
         }
     }
+}
+
+private fun ThemeMode.labelRes(): Int = when (this) {
+    ThemeMode.SYSTEM -> R.string.profile_theme_system
+    ThemeMode.LIGHT -> R.string.profile_theme_light
+    ThemeMode.DARK -> R.string.profile_theme_dark
 }
 
 @Composable
@@ -426,14 +453,6 @@ private fun CloudSyncCard(
                     ),
                 )
             }
-        }
-        if (notLinked) {
-            Spacer(Modifier.height(10.dp))
-            Text(
-                text = stringResource(R.string.profile_cloud_anonymous_note),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.8f),
-            )
         }
     }
 }

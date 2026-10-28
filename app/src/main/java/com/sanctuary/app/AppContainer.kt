@@ -1,6 +1,7 @@
 package com.sanctuary.app
 
 import android.content.Context
+import com.sanctuary.core.data.AppearancePreferences
 import com.sanctuary.core.data.BackupRepository
 import com.sanctuary.core.data.ProfileRepository
 import com.sanctuary.core.data.SanctuaryData
@@ -32,6 +33,8 @@ class AppContainer(
     override val scrollRepository: ScrollRepository = data.scrollRepository
 
     override val trackingPreferences: TrackingPreferences = data.trackingPreferences
+
+    val appearancePreferences: AppearancePreferences = data.appearancePreferences
 
     val backupRepository: BackupRepository = data.backupRepository
 

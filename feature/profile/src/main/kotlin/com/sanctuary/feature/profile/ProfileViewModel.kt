@@ -5,10 +5,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import com.sanctuary.core.data.AppearancePreferences
 import com.sanctuary.core.data.BackupRepository
 import com.sanctuary.core.data.ProfileDraft
 import com.sanctuary.core.data.ProfileRepository
 import com.sanctuary.core.data.TrackingPreferences
+import com.sanctuary.core.model.ThemeMode
 import com.sanctuary.core.model.UserProfile
 import com.sanctuary.core.sync.CloudSyncManager
 import com.sanctuary.core.sync.CloudSyncState
@@ -41,6 +43,7 @@ data class ProfileUiState(
     val exportNotice: ProfileNotice? = null,
     val backupFileName: String = "sanctuary-backup.json",
     val cloudState: CloudSyncState? = null,
+    val themeMode: ThemeMode = ThemeMode.SYSTEM,
 )
 
 class ProfileViewModel(
@@ -48,6 +51,7 @@ class ProfileViewModel(
     private val trackingPreferences: TrackingPreferences,
     private val backupRepository: BackupRepository,
     private val cloudSyncManager: CloudSyncManager,
+    private val appearancePreferences: AppearancePreferences,
     private val isTrackingEnabled: () -> Boolean,
     private val clock: Clock,
 ) : ViewModel() {
@@ -87,6 +91,11 @@ class ProfileViewModel(
         viewModelScope.launch {
             cloudSyncManager.state.collect { cloudState ->
                 _uiState.update { it.copy(cloudState = cloudState) }
+            }
+        }
+        viewModelScope.launch {
+            appearancePreferences.themeMode.collect { themeMode ->
+                _uiState.update { it.copy(themeMode = themeMode) }
             }
         }
     }
@@ -164,6 +173,12 @@ class ProfileViewModel(
         }
     }
 
+    fun setThemeMode(mode: ThemeMode) {
+        viewModelScope.launch {
+            appearancePreferences.setThemeMode(mode)
+        }
+    }
+
     fun exportBackup(uri: Uri) {
         if (_uiState.value.isExporting) return
         viewModelScope.launch {
@@ -186,6 +201,7 @@ class ProfileViewModel(
             trackingPreferences: TrackingPreferences,
             backupRepository: BackupRepository,
             cloudSyncManager: CloudSyncManager,
+            appearancePreferences: AppearancePreferences,
             isTrackingEnabled: () -> Boolean,
             clock: Clock,
         ) = viewModelFactory {
@@ -195,6 +211,7 @@ class ProfileViewModel(
                     trackingPreferences = trackingPreferences,
                     backupRepository = backupRepository,
                     cloudSyncManager = cloudSyncManager,
+                    appearancePreferences = appearancePreferences,
                     isTrackingEnabled = isTrackingEnabled,
                     clock = clock,
                 )

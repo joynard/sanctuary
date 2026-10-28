@@ -35,6 +35,10 @@ class SanctuaryData(
         TrackingPreferences(appContext)
     }
 
+    val appearancePreferences: AppearancePreferences by lazy {
+        AppearancePreferences(appContext)
+    }
+
     val backupRepository: BackupRepository by lazy {
         JsonBackupRepository(
             contentResolver = appContext.contentResolver,
