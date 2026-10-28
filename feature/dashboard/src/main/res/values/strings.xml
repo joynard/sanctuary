@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dashboard_greeting">%1$s, %2$s.</string>
+    <string name="dashboard_today">Hari ini</string>
+    <string name="dashboard_scroll_unit">scroll</string>
+    <string name="dashboard_of_goal">dari %1$s</string>
+    <string name="dashboard_status_empty">Belum ada scroll yang tercatat. Ruang ini tetap milikmu.</string>
+    <string name="dashboard_status_below">Masih ada %1$s scroll sebelum batas harian.</string>
+    <string name="dashboard_status_over">Batas harian sudah terlewati. Tidak apa-apa; pilih jeda dan mulai lagi.</string>
+    <string name="dashboard_remaining">Sisa ruang</string>
+    <string name="dashboard_sessions">Sesi</string>
+    <string name="dashboard_ring_description">%1$s dari %2$s scroll hari ini</string>
+    <string name="dashboard_tracking_on">Hitung aktif</string>
+    <string name="dashboard_paused_pill">Dijeda</string>
+    <string name="dashboard_permission_title">Hitung scroll belum aktif</string>
+    <string name="dashboard_permission_body">Angka di atas baru akan bertambah setelah layanan aksesibilitas Sanctuary dinyalakan. Kamu tetap bisa memakai aplikasi ini tanpa izin itu.</string>
+    <string name="dashboard_permission_cta">Aktifkan hitung scroll</string>
+    <string name="dashboard_paused_title">Hitung sedang dijeda</string>
+    <string name="dashboard_paused_body">Tidak ada scroll yang dicatat sampai kamu melanjutkan. Jeda ini tidak menghapus riwayat.</string>
+    <string name="dashboard_resume">Lanjutkan hitung</string>
+    <string name="dashboard_intention">Niat hari ini: %1$s</string>
+    <string name="dashboard_week_label">Ritme 7 hari</string>
+    <string name="dashboard_week_total">Total %1$s</string>
+    <string name="dashboard_week_average">Rata-rata %1$s scroll per hari</string>
+    <string name="dashboard_week_description">Grafik tujuh hari, total %1$s scroll, batas harian %2$s</string>
+    <string name="dashboard_week_empty">Belum ada ritme untuk digambar. Tujuh hari pertama akan terisi setelah hitungan aktif.</string>
+    <string name="dashboard_platform_label">Per aplikasi</string>
+    <string name="dashboard_platform_note">Android memberi sinyal per aplikasi. Instagram feed dan Reels tidak bisa dipisah. YouTube Shorts dikenali dari pergantian judul; feed YouTube tetap dihitung per package.</string>
+    <string name="dashboard_footer">Yang disimpan hanya hitungan, waktu, dan profil. Bukan isi layar, pesan, atau akunmu.</string>
+</resources>
