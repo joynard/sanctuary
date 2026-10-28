@@ -1,0 +1,7 @@
+# Copy to local.properties. Never commit the real file.
+# Android SDK location; Gradle can also read ANDROID_HOME.
+sdk.dir=C\:\\Users\\<you>\\AppData\\Local\\Android\\Sdk
+
+# Optional cloud sync. Leave blank for a fully local build.
+SUPABASE_URL=
+SUPABASE_ANON_KEY=
