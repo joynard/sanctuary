@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tracking_service_label">Pelacakan Sanctuary</string>
+    <string name="tracking_service_description">Menghitung gestur scroll di TikTok dan Instagram, serta scroll dan pergantian Shorts di YouTube. Untuk Shorts, Sanctuary membaca judul dan nama channel yang tampil di memori. Isi layar tidak disimpan dan tidak dikirim.</string>
+</resources>
